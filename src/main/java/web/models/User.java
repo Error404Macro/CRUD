@@ -1,13 +1,12 @@
 package web.models;
 
 
-import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
-@Transactional
 public class User {
     @Id
     @Column(name = "id")
@@ -23,8 +22,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String name, int age) {
-        this.id = id;
+    public User(String name, int age) {
         this.name = name;
         this.age = age;
     }

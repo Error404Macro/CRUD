@@ -5,9 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import web.models.User;
 import org.springframework.transaction.annotation.Transactional;
-
+import web.models.User;
 
 import java.util.List;
 
@@ -26,25 +25,35 @@ public class UserDAO {
     public List<User> index() {
         Session session = sessionFactory.getCurrentSession();
 
-        List<User> users = session.createQuery("select user from User user", User.class)
+        return session.createQuery("select user from User user", User.class)
                 .getResultList();
 
-        return users;
     }
 
+    @Transactional(readOnly = true)
     public User show(int id) {
-        return null;
+        Session session = sessionFactory.getCurrentSession();
+        return session.get(User.class, id);
     }
 
+    @Transactional
     public void save(User user) {
-
+        Session session = sessionFactory.getCurrentSession();
+        session.save(user);
     }
 
+    @Transactional
     public void update(int id, User updatedUser) {
+        Session session = sessionFactory.getCurrentSession();
+        User userToBeUpdated = session.get(User.class, id);
 
+        userToBeUpdated.setName(updatedUser.getName());
+        userToBeUpdated.setAge(updatedUser.getAge());
     }
 
+    @Transactional
     public void delete(int id) {
-
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(session.get(User.class, id));
     }
 }
