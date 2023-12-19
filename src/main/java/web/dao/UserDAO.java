@@ -13,17 +13,11 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Component
+@Transactional
 public class UserDAO {
 
-
-    //private final SessionFactory sessionFactory;
     @PersistenceContext
     private EntityManager entityManager;
-
-    /*@Autowired
-    public UserDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }*/
 
     @Transactional(readOnly = true)
     public List<User> index() {
