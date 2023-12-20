@@ -4,12 +4,11 @@ package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import web.dao.UserDAO;
+import web.Service.UserService;
+import web.dao.UserDAOImpl;
 import web.models.User;
 
 import javax.validation.Valid;
@@ -19,22 +18,22 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
 
-	private final UserDAO userDAO;
+	private final UserService userService;
 
 	@Autowired
-	public UserController(UserDAO userDAO) {
-		this.userDAO = userDAO;
+	public UserController(UserService userService) {
+		this.userService = userService;
 	}
 
 	@GetMapping()
 	public String index(Model model) {
-		model.addAttribute("users", userDAO.index());
+		model.addAttribute("users", userService.getAllUsers());
 		return "index";
 	}
 
 	@GetMapping("/show")
 	public String show(@RequestParam("id") int id, Model model) {
-		model.addAttribute("user", userDAO.show(id));
+		model.addAttribute("user", userService.getUserById(id));
 		return "show";
 	}
 
@@ -50,13 +49,13 @@ public class UserController {
 			return "new";
 		}
 
-		userDAO.save(user);
+		userService.saveUser(user);
 		return "redirect:/users";
 	}
 
 	@GetMapping("/edit")
 	public String edit(Model model, @RequestParam("id") int id) {
-		model.addAttribute("user", userDAO.show(id));
+		model.addAttribute("user", userService.getUserById(id));
 		return "edit";
 	}
 
@@ -67,13 +66,13 @@ public class UserController {
 			return "edit";
 		}
 
-		userDAO.update(id, user);
+		userService.updateUser(id, user);
 		return "redirect:/users";
 	}
 
 	@DeleteMapping()
 	public String delete(@RequestParam("id") int id) {
-		userDAO.delete(id);
+		userService.deleteUser(id);
 		return "redirect:/users";
 	}
 }
